@@ -33,7 +33,7 @@ urlpatterns = [
     path('restaurant/booking/', include(router.urls)),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-    path('api-auth/', include('rest_framework.urls')),
+    path('api-token-auth/', include('rest_framework.urls')),
     # path('', views.home, name='home'),
 
 ]
