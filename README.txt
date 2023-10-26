@@ -1,4 +1,8 @@
 
+This is my submission for Backend Developer Capstone Project. I have developed a 
+Django app called restaurant using rest framework. Kindly review my submission.
+I take part in Open source projects. So if interested in pair programming, 
+follow me on Github:https://github.com/Shailaputri.
 
 Steps for testing using Client app like Postman or Insomnia:
 To register for new user: /register/
