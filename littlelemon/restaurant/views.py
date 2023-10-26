@@ -3,9 +3,14 @@ from django.http import HttpResponse
 from rest_framework import viewsets, generics
 from . import models, serializers
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.contrib.auth.models import User
 
 # Create your views here.
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = serializers.RegisterSerializer
 
 def home(request):
 	return render(request, 'index.html', {})
