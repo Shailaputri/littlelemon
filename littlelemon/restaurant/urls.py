@@ -9,5 +9,6 @@ path('menu/', views.MenuView.as_view(), name='menu'),
 path('menu/<int:pk>', views.SingleMenuView.as_view(), name='single_menu'),
 path('register/', views.RegisterView.as_view()),
 path('api-token-auth/', obtain_auth_token),
+path('form/', views.form_view, name='form'),
 # path('msg/',views.msg, name='msg'),
 ]
