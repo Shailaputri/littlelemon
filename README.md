@@ -22,6 +22,9 @@ Booking Table API : /restaurant/booking/tables/
 4. Go to "http://127.0.0.1:8000/restaurant/menu/menu/1" to see or update individual menu item.  
 5. Go to "http://127.0.0.1:8000/restaurant/booking/tables/" to see or update table bookings.  
 6. Go to "http://127.0.0.1:8000/api-auth/logout/" to logout after testing.  
+7. Got to "http://127.0.0.1:8000/restaurant/menu/bookings/" to view all reservations.
+8. Go to "http://127.0.0.1:8000/restaurant/menu/book/"  to make a reservation.
+9. Go to "http://127.0.0.1:8000/restaurant/menu/form/" to a Menu form to update menu items.
 
 ### Steps for unit testing: 
 cd littlemon  
