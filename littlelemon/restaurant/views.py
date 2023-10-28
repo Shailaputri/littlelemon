@@ -72,9 +72,21 @@ def book(request):
 # Add code for the bookings() view
 def bookings(request):
 	date = request.GET.get('date', datetime.today().date())
-	bookings = models.BookingTable.objects.all()
+	# bookings = models.BookingTable.objects.all()
+	bookings = models.BookingTable.objects.all().filter(reservation_date = date)
 	booking_json = core_serializer.serialize('json', bookings)
 	return render(request, "bookings.html", {'bookings' : booking_json})
+
+	if request.method == 'POST':
+		data = json.load(request)
+		exist = models.BookingTable.objects.filter(reservation_date = data['reservation_date']).filter(
+			reservation_slot = data['reservation_slot']).exists()
+		if not exist:
+			booking = models.BookingTable(name = data['name'], bookingdate = data['bookingdate'], \
+				no_of_guests = data['no_of_guests'], reservation_slot = data['reservation_slot'], \
+				 reservation_date = data['reservation_date']).save()
+		else:
+			return HttpResponse("{'error':1}", content_type = 'application/json')
 
 
 
