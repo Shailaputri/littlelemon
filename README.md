@@ -36,3 +36,32 @@ cd littlemon
 python manage.py test  
 
 
+### Features : -
+About page
+![Alt text](Attachments/aboutpage.png?raw=true)&nbsp; 
+  
+Menu form
+![Alt text](Attachments/menuform.png?raw=true)&nbsp;
+
+Booking form
+![Alt text](Attachments/reservationbooking.png?raw=true)&nbsp;
+
+All Bookings in JSON format
+![Alt text](Attachments/allbookings.png?raw=true)&nbsp;
+
+MySQL Data Layer
+![Alt text](Attachments/database.png?raw=true)&nbsp;
+
+API - to generate token
+![Alt text](Attachments/generatetoken.png?raw=true)&nbsp;
+
+API - Menu GET
+![Alt text](Attachments/MenuAPIPostman.png?raw=true)&nbsp;
+![Alt text](Attachments/menupostman.png?raw=true)&nbsp;
+
+API - Menu POST
+![Alt text](Attachments/postmenuapopostman.png?raw=true)&nbsp;
+
+APi - Single Menu
+![Alt text](Attachments/Singlemenuapipostman.png?raw=true)&nbsp;
+
