@@ -1,0 +1,21 @@
+<!--add this template tag-->
+{% load static %}
+<html>
+   <head>
+      <title>Capstone Project</title>
+   </head>
+   <body>
+      <div>
+
+         <img src="{% static 'restaurant/logo.png' %}"/>
+         <h1 style="text-align:center;">Welcome To LittleLemon Restaurant</h1>
+         <h3>Please make your reservations or update Menu. No Authentication for frontend for now</h3>
+         <li>
+            <ol>Go to "http://127.0.0.1:8000/restaurant/menu/index/" for About section.</ol>
+            <ol>Go to "http://127.0.0.1:8000/restaurant/menu/allbookings/" to view all reservations.</ol>
+            <ol>Go to "http://127.0.0.1:8000/restaurant/menu/book/"  to make a reservation</ol>
+            <ol>Go to "http://127.0.0.1:8000/restaurant/menu/menu_items" to a Menu form to update menu items</ol>
+         </li>
+      </div>
+   </body>
+</html>

@@ -1,10 +1,17 @@
 from django.shortcuts import render
+from django.core import serializers as core_serializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework import viewsets, generics
 from . import models, serializers, forms
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User
+from datetime import datetime
+
+import json
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 
 # Create your views here.
@@ -13,8 +20,11 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = serializers.RegisterSerializer
 
-def home(request):
+def index(request):
 	return render(request, 'index.html', {})
+
+def home(request):
+	return render(request, 'home.html', {})
 
 class MenuView(generics.ListCreateAPIView):
 	'''
@@ -41,7 +51,7 @@ class BookingViewSet(viewsets.ModelViewSet):
 	queryset = models.BookingTable.objects.all()
 	serializer_class = serializers.BookingTableSerializer
 
-def form_view(request):
+def menu_items(request):
 	form = forms.MenuForm()
 	if request.method == 'POST':
 		form = forms.MenuForm(request.POST)
@@ -51,6 +61,46 @@ def form_view(request):
 			mf.save()
 			return JsonResponse({'message' : 'success'})
 	return render(request, 'menu_items.html', {'form': form})
+
+def book(request):
+    form = forms.BookingForm()
+    if request.method == 'POST':
+        form = forms.BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+    context = {'form':form}
+    return render(request, 'book.html', context)
+
+# Add code for the bookings() view
+@csrf_exempt
+def bookings(request):
+	if request.method == 'POST':
+		data = json.load(request)
+		exist = models.BookingTable.objects.filter(reservation_date=data['reservation_date']).filter(
+            reservation_slot=data['reservation_slot']).exists()
+		if exist == False:
+			booking = models.BookingTable(name = data['name'], \
+				no_of_guests = data['no_of_guests'], reservation_slot = data['reservation_slot'], \
+				 reservation_date = data['reservation_date']).save()
+			# return render(request, "bookings.html", {'bookings' : booking_json})
+		else:
+			# return render(request, "bookings.html", {})
+			return HttpResponse("{ 'error':1 }", content_type = 'application/json')
+	date = request.GET.get('date', datetime.today().date());
+	# bookings = models.BookingTable.objects.all()
+	bookings = models.BookingTable.objects.all().filter(reservation_date = date);
+	booking_json = core_serializer.serialize('json', bookings);
+	# return render(request, "bookings.html", {'bookings' : booking_json})
+	return HttpResponse(booking_json, content_type = 'application/json')
+
+def allbookings(request):
+	date = request.GET.get('date', datetime.today().date());
+	bookings = models.BookingTable.objects.all()
+	booking_json = core_serializer.serialize('json', bookings);
+	return render(request, "bookings.html", {'bookings' : booking_json})
+	
+
+
 
 
 

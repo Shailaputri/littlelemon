@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+  <article>
+    <h1>All Reservations</h1>
+    <!--Begin row-->
+    <div class="row">
+      <!--Begin col-->
+      <div class="column">
+        <pre id="bookings"></pre>
+      </div>
+      <!--End col-->
+    </div>
+    <!--End row-->
+
+
+
+
+  </article>
+</section>
+
+<!-- Add your code inside the script tags below  -->
+<script>
+  // const reservation_bookings = document.getElementById("reservation_bookings");
+  bookings = JSON.parse('{{ bookings|safe }}');
+  console.log(bookings);
+  pretty_json = JSON.stringify(bookings, null, 2);
+  document.getElementById("bookings").innerHTML = pretty_json;
+  
+
+</script>
+{% endblock %}
+

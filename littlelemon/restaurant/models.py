@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+from datetime import datetime
+from django.utils import timezone
 
 # Create your models here.
 class BookingTable(models.Model):
@@ -10,6 +12,9 @@ class BookingTable(models.Model):
 	name = models.CharField(max_length = 255, null=True, blank=True)
 	no_of_guests = models.IntegerField(null=True, blank=True)
 	bookingdate = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+	reservation_slot = models.SmallIntegerField(default = 10)
+	reservation_date = models.DateTimeField(default=timezone.now())
+
 	def __str__(self):
 		return f'Your booking confirmed under {self.name} for {self.no_of_guests} \
 		on {self.bookingdate}.'
