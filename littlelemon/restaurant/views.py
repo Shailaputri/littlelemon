@@ -20,12 +20,27 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = serializers.RegisterSerializer
 
-def index(request):
-	return render(request, 'index.html', {})
+
+#function based views for about, home and menu pages - DJANGO project. 
+def about(request):
+	return render(request, 'about.html', {})
 
 def home(request):
 	return render(request, 'home.html', {})
 
+def simple_menu(request):
+	menu_data = models.Menu.objects.all().order_by('title')
+	main_data = {"menu" : menu_data}
+	return render(request, "simple_menu.html", main_data)
+
+def display_menu_items(request, pk=None):
+	if pk:
+		menu_item = models.Menu.objects.get(pk=pk)
+	else:
+		menu_item = ''
+	return render(request, "single_menu_item.html", {"menu_item":menu_item})
+
+#Generics class based views for Menu, Single Menu and Booking - DRF Project
 class MenuView(generics.ListCreateAPIView):
 	'''
 	handles the POST and GET method calls of Menu API
@@ -51,6 +66,8 @@ class BookingViewSet(viewsets.ModelViewSet):
 	queryset = models.BookingTable.objects.all()
 	serializer_class = serializers.BookingTableSerializer
 
+
+#function based views to implement Menu and Reservation booking forms
 def menu_items(request):
 	form = forms.MenuForm()
 	if request.method == 'POST':

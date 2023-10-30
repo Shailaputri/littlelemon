@@ -14,10 +14,10 @@ Head to http://127.0.0.1:8000/restaurant/menu/ for instructions.
 No authentication has been implemented for frontend for now.
 API testing needs authentication. 
 
-## Note for Meta Certification Peer Reviewers : 
-## To make it easy for reviewers, I have tested all project requirements
-## and attached screenshots in PeerReviewQnsScreenshots.md. 
-## Please check that.
+### Note for Meta Certification Peer Reviewers : 
+### To make it easy for reviewers, I have tested all project requirements
+### and attached screenshots in PeerReviewQnsDjango.md. 
+### Please check that.
 
 ### Steps for testing using Client app like Postman or Insomnia:  
 To register for new user: /register/  
