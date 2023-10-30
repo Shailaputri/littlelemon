@@ -6,6 +6,7 @@ class MenuForm(forms.Form):
     title = forms.CharField(max_length =255)
     price = forms.CharField(max_length = 10)
     inventory = forms.CharField(max_length = 4)
+    description = forms.CharField(widget=forms.Textarea)
 
 class BookingForm(forms.ModelForm):
     class Meta:
