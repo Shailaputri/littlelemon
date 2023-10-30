@@ -22,7 +22,9 @@
 {% for item in menu %}
    <p>
       <!-- Step 14: Add DTL variable for name -->
+<a href = "{% url 'single_menu_item' pk=item.pk %}">
 {{item.title}}
+</a>
       <span class="menu-price">
          <!-- Step 14: Add DTL variable for price --> 
          ${{item.price}}
@@ -31,5 +33,7 @@
    <!-- Step 14: End or loop -->
     {% endfor %}
 </div>
+</article>
+</section>
 <!--End col-->
 {% endblock %}

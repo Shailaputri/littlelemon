@@ -33,6 +33,13 @@ def simple_menu(request):
 	main_data = {"menu" : menu_data}
 	return render(request, "simple_menu.html", main_data)
 
+def display_menu_items(request, pk=None):
+	if pk:
+		menu_item = models.Menu.objects.get(pk=pk)
+	else:
+		menu_item = ''
+	return render(request, "single_menu_item.html", {"menu_item":menu_item})
+
 #Generics class based views for Menu, Single Menu and Booking - DRF Project
 class MenuView(generics.ListCreateAPIView):
 	'''

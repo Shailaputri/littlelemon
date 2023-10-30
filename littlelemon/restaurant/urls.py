@@ -7,6 +7,7 @@ urlpatterns = [
 path('', views.home, name='home'),
 path('about/', views.about, name='about'),
 path('simple_menu/', views.simple_menu, name='simple_menu'),
+path('single_menu_item/<int:pk>/', views.display_menu_items, name='single_menu_item'),
 path('menu/', views.MenuView.as_view(), name='menu'),
 path('menu/<int:pk>', views.SingleMenuView.as_view(), name='single_menu'),
 path('register/', views.RegisterView.as_view()),
