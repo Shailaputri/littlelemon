@@ -29,7 +29,7 @@ def home(request):
 	return render(request, 'home.html', {})
 
 def simple_menu(request):
-	menu_data = models.Menu.objects.all()
+	menu_data = models.Menu.objects.all().order_by('title')
 	main_data = {"menu" : menu_data}
 	return render(request, "simple_menu.html", main_data)
 
