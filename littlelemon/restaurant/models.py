@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -27,11 +28,11 @@ class Category(models.Model):
 	This will have many-to-one relationship 
 	with Menu model. 
 	'''
-	# class Meta :
-	# 	verbose_name_plural = "Categories"
+	class Meta :
+		verbose_name_plural = "Categories"
 	# slug = models.SlugField(null=True, blank=True)
 	slug = models.SlugField()
-	title = models.CharField(max_length = 255)
+	title = models.CharField(max_length = 255, db_index=True)
 	# slug = models.AutoSlugField(populate_from='title', unique=True)
 	
 	
@@ -45,10 +46,11 @@ class Menu(models.Model):
 	in LittleLemon restaurant.
 	'''
 	category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
-	title = models.CharField(max_length =255, null=True, blank=True)
+	title = models.CharField(max_length =255, null=True, blank=True, db_index = True)
 	price = models.DecimalField(max_digits = 10, decimal_places = 2, null=True, blank=True)
 	inventory = models.IntegerField(null=True, blank=True)
 	description = models.TextField(null=True, blank=True, max_length=1000, default='')
+	# featured = models.BooleanField(default= False, db_index = True)
 	
 
 	def __str__(self):
@@ -56,6 +58,14 @@ class Menu(models.Model):
 	def get_menu(self):
 		return f'{self.title} : {str(self.price)}'
 
+class Rating(models.Model):
+	'''
+	Rating model defines attributes of rating
+	model
+	'''
+	menuitem_id = models.SmallIntegerField()
+	rating = models.SmallIntegerField()
+	user = models.ForeignKey(User, on_delete = models.CASCADE)
 
 
 

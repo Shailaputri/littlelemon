@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from restaurant.models import Menu, BookingTable, Category
+from restaurant.models import Menu, BookingTable, Category, Rating
 from django.contrib.auth.models import User
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from django.contrib.auth.password_validation import validate_password
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -28,6 +28,26 @@ class BookingTableSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = BookingTable
 		fields = '__all__'
+
+class RatingSerializer(serializers.ModelSerializer):
+	'''
+	Serializer that allows only 1 rating for 1 user per menu item
+	'''
+	user = serializers.PrimaryKeyRelatedField(
+		queryset = User.objects.all(),
+		default = serializers.CurrentUserDefault()
+		)
+	class Meta:
+		model = Rating
+		fields = ['user', 'menuitem_id', 'rating']
+		validators = [UniqueTogetherValidator(queryset=Rating.objects.all(),\
+		fields = ['user','menuitem_id','rating'])]
+		extra_kwargs = {
+		'rating' : {'max_value' : 5, 'min_value' : 0}}
+
+
+		
+
 
 
 

@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User
 from datetime import datetime
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -63,6 +64,14 @@ class SingleMenuView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
 	queryset = models.Menu.objects.all()
 	serializer_class = serializers.MenuSerializer
 	
+class RatingsView(generics.ListCreateAPIView):
+	throttle_classes = [AnonRateThrottle, UserRateThrottle]
+	queryset = models.Rating.objects.all()
+	serializer_class = serializers.RatingSerializer
+	def get_permissions(self):
+		if self.request.method == 'GET':
+			return []
+		return [IsAuthenticated()]
 
 
 class BookingViewSet(viewsets.ModelViewSet):
@@ -72,6 +81,7 @@ class BookingViewSet(viewsets.ModelViewSet):
 	permission_classes=[IsAuthenticated]
 	queryset = models.BookingTable.objects.all()
 	serializer_class = serializers.BookingTableSerializer
+
 
 
 

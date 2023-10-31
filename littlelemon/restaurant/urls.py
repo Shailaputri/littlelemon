@@ -28,4 +28,5 @@ path('menu/<int:pk>', views.SingleMenuView.as_view(), name='single_menu'),
 path('register/', views.RegisterView.as_view()),
 path('api-token-auth/', obtain_auth_token),
 path('category/', views.CategoriesView.as_view(), name='category'),
+path('ratings/', views.RatingsView.as_view(), name='ratings'),
 ]
