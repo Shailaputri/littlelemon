@@ -51,12 +51,13 @@ class CartSerializer(serializers.ModelSerializer):
 		queryset = User.objects.all(),
 		default = serializers.CurrentUserDefault()
 		)
-	menu_id = serializers.IntegerField(write_only = True)
+	# menu_id = serializers.IntegerField(write_only = True)
 	menu = MenuSerializer(read_only = True)
 
 	class Meta:
 		model = Cart
-		fields = ['id','user', 'menuitem', 'quantity', 'unit_price', 'price', 'menu_id', 'menu']
+		# fields = ['id','user', 'menuitem', 'quantity', 'unit_price', 'price', 'menu_id', 'menu']
+		fields = ['id','user', 'menuitem', 'quantity', 'unit_price', 'price', 'menu']
 		validators = [UniqueTogetherValidator(queryset=Cart.objects.all(),\
 		fields = ['user','menuitem'])]
 class OrderSerializer(serializers.ModelSerializer):
@@ -73,11 +74,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
 		queryset = User.objects.all(),
 		default = serializers.CurrentUserDefault()
 		)
-	menu_id = serializers.IntegerField(write_only = True)
+	# menu_id = serializers.IntegerField(write_only = True)
 	menu = MenuSerializer(read_only = True)
 	class Meta:
 		model = OrderItem
-		fields = ['id','order', 'menuitem', 'quantity', 'unit_price', 'price', 'menu_id', 'menu']
+		# fields = ['id','order', 'menuitem', 'quantity', 'unit_price', 'price', 'menu_id', 'menu']
+		fields = ['id','order', 'menuitem', 'quantity', 'unit_price', 'price', 'menu']
 		validators = [UniqueTogetherValidator(queryset=Cart.objects.all(),\
 		fields = ['order','menuitem'])]
 

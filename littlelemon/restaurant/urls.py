@@ -32,5 +32,14 @@ path('ratings/', views.RatingsView.as_view(), name='ratings'),
 path('cart/', views.CartView.as_view(), name='cart'),
 path('order/', views.OrderView.as_view(), name='order'),
 path('orderitem/', views.OrderItemView.as_view(), name='order_item'),
-
+path('groups/manager/users/', views.manager, name='groups_manager')
 ]
+
+#Register - register/
+
+#Login - /auth/token/login/
+
+
+#view token- api-token-auth/
+
+#assign user to manager group - groups/manager/users/

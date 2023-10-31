@@ -1,16 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core import serializers as core_serializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework import viewsets, generics
 from . import models, serializers, forms
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django.contrib.auth.models import User
 from datetime import datetime
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User,Group
+from rest_framework import status
+
 
 
 
@@ -85,6 +88,11 @@ class BookingViewSet(viewsets.ModelViewSet):
 class CartView(generics.ListCreateAPIView):
 	queryset = models.Cart.objects.all()
 	serializer_class = serializers.CartSerializer
+	def get_permissions(self):
+		if not self.request.user.groups.filter(name = 'Customer').exists():
+			return []
+		return [IsAuthenticated()]
+
 
 class OrderView(generics.ListCreateAPIView):
 	queryset = models.Order.objects.all()
@@ -143,6 +151,21 @@ def allbookings(request):
 	bookings = models.BookingTable.objects.all()
 	booking_json = core_serializer.serialize('json', bookings);
 	return render(request, "bookings.html", {'bookings' : booking_json})
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def manager(request):
+	username = request.data['username']
+	if username:
+		user = get_object_or_404(User, username=username)
+		manager = Group.objects.get(name = 'Manager')
+		if request.method == 'POST':
+			manager.user_set.add(user)
+		elif request.method == 'DELETE':
+			manager.user_set.remove(user)
+		return HttpResponse("{'message': 'user added to the manager group'}", content_type = 'application/json')
+	return HttpResponse("{'message':'error'}", status.HTTP_400_BAD_REQUEST, content_type = 'application/json')
+
 	
 
 

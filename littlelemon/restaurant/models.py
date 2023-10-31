@@ -63,7 +63,7 @@ class Cart(models.Model):
 	1 cart will have 1 menu item
 	'''
 	user = models.ForeignKey(User, on_delete = models.CASCADE)
-	menuitem = models.ForeignKey(Menu, on_delete = models.CASCADE)
+	menuitem = models.ForeignKey(Menu, on_delete = models.CASCADE, default = 1)
 	quantity = models.SmallIntegerField()
 	unit_price = models.DecimalField(max_digits = 10, decimal_places =2)
 	price = models.DecimalField(max_digits = 10, decimal_places =2)
@@ -99,7 +99,7 @@ class OrderItem(models.Model):
 	and Order ID is created.
 	'''
 	order = models.ForeignKey(User, on_delete = models.CASCADE)
-	menuitem = models.ForeignKey(Menu, on_delete = models.CASCADE)
+	menuitem = models.ForeignKey(Menu, on_delete = models.CASCADE, default = 1)
 	quantity = models.SmallIntegerField()
 	unit_price = models.DecimalField(max_digits = 10, decimal_places =2)
 	price = models.DecimalField(max_digits = 10, decimal_places =2)
