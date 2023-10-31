@@ -8,6 +8,7 @@ class MenuForm(forms.Form):
     inventory = forms.CharField(max_length = 4)
     description = forms.CharField(widget=forms.Textarea)
     category = forms.ModelChoiceField(queryset=Category.objects.all())
+    # featured = forms.ModelChoiceField(queryset = [True, False])
     # class Meta:
     #     model = Menu
     #     fields = '__all__'

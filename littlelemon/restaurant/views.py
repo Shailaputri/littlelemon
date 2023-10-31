@@ -82,7 +82,17 @@ class BookingViewSet(viewsets.ModelViewSet):
 	queryset = models.BookingTable.objects.all()
 	serializer_class = serializers.BookingTableSerializer
 
+class CartView(generics.ListCreateAPIView):
+	queryset = models.Cart.objects.all()
+	serializer_class = serializers.CartSerializer
 
+class OrderView(generics.ListCreateAPIView):
+	queryset = models.Order.objects.all()
+	serializer_class = serializers.OrderSerializer
+
+class OrderItemView(generics.ListCreateAPIView):
+	queryset = models.OrderItem.objects.all()
+	serializer_class = serializers.OrderItemSerializer
 
 
 #function based views to implement Menu and Reservation booking forms

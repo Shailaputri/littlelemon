@@ -29,4 +29,8 @@ path('register/', views.RegisterView.as_view()),
 path('api-token-auth/', obtain_auth_token),
 path('category/', views.CategoriesView.as_view(), name='category'),
 path('ratings/', views.RatingsView.as_view(), name='ratings'),
+path('cart/', views.CartView.as_view(), name='cart'),
+path('order/', views.OrderView.as_view(), name='order'),
+path('orderitem/', views.OrderItemView.as_view(), name='order_item'),
+
 ]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from restaurant.models import Menu, BookingTable, Category, Rating
+from restaurant.models import Menu, BookingTable, Category, Rating, Cart, Order, OrderItem
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from django.contrib.auth.password_validation import validate_password
@@ -16,8 +16,9 @@ class MenuSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Menu
 		fields = ['id','title', 'price', 'inventory', 'description', 'category', 'category_id']
+		# fields = ['id','title', 'price', 'inventory', 'description', 'category', 'category_id','featured']
 		# fields = ['title', 'price', 'inventory', 'description', 'category']
-		fields = '__all__'
+		# fields = '__all__'
 		extra_kwargs = {
 		'price' : {'min_value' : 2}, 
 		'inventory' : {'min_value' : 0}
@@ -44,6 +45,44 @@ class RatingSerializer(serializers.ModelSerializer):
 		fields = ['user','menuitem_id','rating'])]
 		extra_kwargs = {
 		'rating' : {'max_value' : 5, 'min_value' : 0}}
+
+class CartSerializer(serializers.ModelSerializer):
+	user = serializers.PrimaryKeyRelatedField(
+		queryset = User.objects.all(),
+		default = serializers.CurrentUserDefault()
+		)
+	menu_id = serializers.IntegerField(write_only = True)
+	menu = MenuSerializer(read_only = True)
+
+	class Meta:
+		model = Cart
+		fields = ['id','user', 'menuitem', 'quantity', 'unit_price', 'price', 'menu_id', 'menu']
+		validators = [UniqueTogetherValidator(queryset=Cart.objects.all(),\
+		fields = ['user','menuitem'])]
+class OrderSerializer(serializers.ModelSerializer):
+	user = serializers.PrimaryKeyRelatedField(
+		queryset = User.objects.all(),
+		default = serializers.CurrentUserDefault()
+		)
+	class Meta:
+		model = Order
+		fields = ['user', 'date', 'total','status','delivery_crew']
+
+class OrderItemSerializer(serializers.ModelSerializer):
+	order = serializers.PrimaryKeyRelatedField(
+		queryset = User.objects.all(),
+		default = serializers.CurrentUserDefault()
+		)
+	menu_id = serializers.IntegerField(write_only = True)
+	menu = MenuSerializer(read_only = True)
+	class Meta:
+		model = OrderItem
+		fields = ['id','order', 'menuitem', 'quantity', 'unit_price', 'price', 'menu_id', 'menu']
+		validators = [UniqueTogetherValidator(queryset=Cart.objects.all(),\
+		fields = ['order','menuitem'])]
+
+
+
 
 
 		
