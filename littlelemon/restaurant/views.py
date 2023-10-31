@@ -1,15 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core import serializers as core_serializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework import viewsets, generics
 from . import models, serializers, forms
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django.contrib.auth.models import User
 from datetime import datetime
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User,Group
+from rest_framework import status
+
 
 
 
@@ -41,12 +45,19 @@ def display_menu_items(request, pk=None):
 	return render(request, "single_menu_item.html", {"menu_item":menu_item})
 
 #Generics class based views for Menu, Single Menu and Booking - DRF Project
+class CategoriesView(generics.ListCreateAPIView):
+	queryset = models.Category.objects.all()
+	serializer_class = serializers.CategorySerializer
+
 class MenuView(generics.ListCreateAPIView):
 	'''
 	handles the POST and GET method calls of Menu API
 	'''
 	queryset = models.Menu.objects.all()
 	serializer_class = serializers.MenuSerializer
+	ordering_fields = ['price', 'inventory']
+	filterset_fields = ['price', 'inventory']
+	search_fields = ['title']
 
 class SingleMenuView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
 	'''
@@ -56,6 +67,14 @@ class SingleMenuView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
 	queryset = models.Menu.objects.all()
 	serializer_class = serializers.MenuSerializer
 	
+class RatingsView(generics.ListCreateAPIView):
+	throttle_classes = [AnonRateThrottle, UserRateThrottle]
+	queryset = models.Rating.objects.all()
+	serializer_class = serializers.RatingSerializer
+	def get_permissions(self):
+		if self.request.method == 'GET':
+			return []
+		return [IsAuthenticated()]
 
 
 class BookingViewSet(viewsets.ModelViewSet):
@@ -66,6 +85,23 @@ class BookingViewSet(viewsets.ModelViewSet):
 	queryset = models.BookingTable.objects.all()
 	serializer_class = serializers.BookingTableSerializer
 
+class CartView(generics.ListCreateAPIView):
+	queryset = models.Cart.objects.all()
+	serializer_class = serializers.CartSerializer
+	def get_permissions(self):
+		if not self.request.user.groups.filter(name = 'Customer').exists():
+			return []
+		return [IsAuthenticated()]
+
+
+class OrderView(generics.ListCreateAPIView):
+	queryset = models.Order.objects.all()
+	serializer_class = serializers.OrderSerializer
+
+class OrderItemView(generics.ListCreateAPIView):
+	queryset = models.OrderItem.objects.all()
+	serializer_class = serializers.OrderItemSerializer
+
 
 #function based views to implement Menu and Reservation booking forms
 def menu_items(request):
@@ -74,7 +110,7 @@ def menu_items(request):
 		form = forms.MenuForm(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
-			mf = models.Menu(title = cd['title'], price = cd['price'], inventory = cd['inventory'])
+			mf = models.Menu(title = cd['title'], price = cd['price'], inventory = cd['inventory'], description = cd['description'], category = cd['category'])
 			mf.save()
 			return JsonResponse({'message' : 'success'})
 	return render(request, 'menu_items.html', {'form': form})
@@ -115,6 +151,21 @@ def allbookings(request):
 	bookings = models.BookingTable.objects.all()
 	booking_json = core_serializer.serialize('json', bookings);
 	return render(request, "bookings.html", {'bookings' : booking_json})
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def manager(request):
+	username = request.data['username']
+	if username:
+		user = get_object_or_404(User, username=username)
+		manager = Group.objects.get(name = 'Manager')
+		if request.method == 'POST':
+			manager.user_set.add(user)
+		elif request.method == 'DELETE':
+			manager.user_set.remove(user)
+		return HttpResponse("{'message': 'user added to the manager group'}", content_type = 'application/json')
+	return HttpResponse("{'message':'error'}", status.HTTP_400_BAD_REQUEST, content_type = 'application/json')
+
 	
 
 

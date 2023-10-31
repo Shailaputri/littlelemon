@@ -25,15 +25,20 @@ router = routers.DefaultRouter()
 router.register(r'tables', views.BookingViewSet)
 
 
+#url dispatcher for frontend
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('restaurant.urls')),
     path('accounts/profile/', include('restaurant.urls')),
+    # path('', views.home, name='home'),
+
+]
+
+#url dispatcher for API endpoints: Ex: http://127.0.0.1:8000/restaurant/menu/menu/
+urlpatterns += [
     path('restaurant/menu/', include('restaurant.urls')),
     path('restaurant/booking/', include(router.urls)),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api-token-auth/', include('rest_framework.urls')),
-    # path('', views.home, name='home'),
-
 ]
