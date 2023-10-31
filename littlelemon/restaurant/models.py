@@ -3,6 +3,7 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from datetime import datetime
 from django.utils import timezone
 
+
 # Create your models here.
 class BookingTable(models.Model):
 	'''
@@ -21,20 +22,44 @@ class BookingTable(models.Model):
 	def get_booking(self):
 		return f'{self.name} : {str(self.no_of_guests)}'
 
+class Category(models.Model):
+	'''
+	This will have many-to-one relationship 
+	with Menu model. 
+	'''
+	# class Meta :
+	# 	verbose_name_plural = "Categories"
+	# slug = models.SlugField(null=True, blank=True)
+	slug = models.SlugField()
+	title = models.CharField(max_length = 255)
+	# slug = models.AutoSlugField(populate_from='title', unique=True)
+	
+	
+
+	def __str__(self):
+		return self.title
+
 class Menu(models.Model):
 	'''
 	Menu model defines attributes of food menu
 	in LittleLemon restaurant.
 	'''
+	category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
 	title = models.CharField(max_length =255, null=True, blank=True)
 	price = models.DecimalField(max_digits = 10, decimal_places = 2, null=True, blank=True)
 	inventory = models.IntegerField(null=True, blank=True)
 	description = models.TextField(null=True, blank=True, max_length=1000, default='')
+	
 
 	def __str__(self):
 		return f'{self.title} : {str(self.price)} is added.'
 	def get_menu(self):
 		return f'{self.title} : {str(self.price)}'
+
+
+
+
+
 
 
 

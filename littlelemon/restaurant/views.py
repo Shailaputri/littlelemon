@@ -41,12 +41,19 @@ def display_menu_items(request, pk=None):
 	return render(request, "single_menu_item.html", {"menu_item":menu_item})
 
 #Generics class based views for Menu, Single Menu and Booking - DRF Project
+class CategoriesView(generics.ListCreateAPIView):
+	queryset = models.Category.objects.all()
+	serializer_class = serializers.CategorySerializer
+
 class MenuView(generics.ListCreateAPIView):
 	'''
 	handles the POST and GET method calls of Menu API
 	'''
 	queryset = models.Menu.objects.all()
 	serializer_class = serializers.MenuSerializer
+	ordering_fields = ['price', 'inventory']
+	filterset_fields = ['price', 'inventory']
+	search_fields = ['title']
 
 class SingleMenuView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
 	'''
@@ -67,6 +74,7 @@ class BookingViewSet(viewsets.ModelViewSet):
 	serializer_class = serializers.BookingTableSerializer
 
 
+
 #function based views to implement Menu and Reservation booking forms
 def menu_items(request):
 	form = forms.MenuForm()
@@ -74,7 +82,7 @@ def menu_items(request):
 		form = forms.MenuForm(request.POST)
 		if form.is_valid():
 			cd = form.cleaned_data
-			mf = models.Menu(title = cd['title'], price = cd['price'], inventory = cd['inventory'])
+			mf = models.Menu(title = cd['title'], price = cd['price'], inventory = cd['inventory'], description = cd['description'], category = cd['category'])
 			mf.save()
 			return JsonResponse({'message' : 'success'})
 	return render(request, 'menu_items.html', {'form': form})
